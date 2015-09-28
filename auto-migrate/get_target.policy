@@ -1,0 +1,15 @@
+migrate_target(vm_id, hv_name):-
+   nova:services(host=hv_name, binary="nova-compute", status="disabled"),
+   nova:servers(id=vm_id, host_name=hv_name, status="SHUTOFF")
+
+live_migrate_target(vm_id, hv_name):-
+   nova:services(host=hv_name, binary="nova-compute", status="disabled"),
+   nova:servers(id=vm_id, host_name=hv_name, status="ACTIVE")
+
+stop_and_migrate_target(vm_id, hv_name):-
+   nova:services(host=hv_name, binary="nova-compute", status="enabled"),
+   nova:servers(id=vm_id, host_name=hv_name, status="SHUTOFF")
+
+evacuate_target(vm_id, hv_name):-
+   nova:services(host=hv_name, binary="nova-compute", state="down"),
+   nova:servers(id=vm_id, host_name=hv_name)
