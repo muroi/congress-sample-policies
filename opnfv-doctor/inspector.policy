@@ -1,0 +1,10 @@
+# mark host down
+binary_list("nova-compute"):- true
+
+active_compute_hypervisor(hypervisor, binary) :-
+  nova:services(host=hypervisor, binary=binary, state="up"),
+  binary_list(binary)
+
+execute[nova:services.force_down(host, binary, "True")] :-
+  doctor:events(hostname=host, type="compute.host.down", status="down"),
+  active_compute_hypervisor(host, binary)
